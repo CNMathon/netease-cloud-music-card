@@ -1,12 +1,10 @@
 require("dotenv").config();
 const { Octokit } = require("@octokit/rest");
 const getNeteaseSvg = require("./src/netease").init;
-const getSteamSvg = require("./src/steam").init;
 const { GH_TOKEN, AUTHOR, REPO } = process.env;
 
 (async () => {
   const musicSvgContent = await getNeteaseSvg();
-  const steamSvgContent = await getSteamSvg();
 
   try {
     const octokit = new Octokit({
@@ -57,7 +55,7 @@ const { GH_TOKEN, AUTHOR, REPO } = process.env;
       ],
       base_tree: lastSha,
     });
-    
+
     const {
       data: { sha: newSHA },
     } = await octokit.git.createCommit({
