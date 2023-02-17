@@ -2,8 +2,6 @@
 
 <div align="center">🎧 在 Github Profile 显示你这周在网易云音乐上最喜欢听的歌曲 🎵</div>
 
-<div align="center"><img src="musicCard.svg"><img src="steamCard.svg"></div>
-
 <br>
 
 ## 🚀 使用方法（一定要按顺序）：
@@ -40,14 +38,6 @@
 
 你也可以将这个图片部署到你的博客等地方 😋
 
-## 🎮 新增： 获取 steam 最近游玩时间
-
-1. 创建你的(TOKEN) Steam API key. (https://steamcommunity.com/dev/apikey)
-
-2. 找到你的账号的 64 位 ID. (https://steamid.io)
-
-3. 将 [main.yml](https://github.com/Nthily/netease-music-card/blob/main/.github/workflows/main.yml#L24) 中的 `STEAM_TOKEN` 与 `STEAM_ID` 修改为自己的 Steam ID 与 TOKEN. （在 `Secrets` 新建一个 `STEAM_TOKEN` 存进去）
-
 ## 💨 本地测试：
 
 `Fork` 项目或者新建一份。
@@ -69,8 +59,6 @@ npm install
 - [netease-music-box](https://github.com/Leecason/netease-music-box)
 
 - [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
-
-- [steam-box](https://github.com/YouEclipse/steam-box/blob/master/README_zh.md)
 
 ## 🤔 工作原理：
 

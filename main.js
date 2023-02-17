@@ -20,15 +20,6 @@ const { GH_TOKEN, AUTHOR, REPO } = process.env;
       encoding: "base64",
     });
 
-    const {
-      data: { sha: steamSvgSha },
-    } = await octokit.git.createBlob({
-      owner: AUTHOR,
-      repo: REPO,
-      content: steamSvgContent,
-      encoding: "base64",
-    });
-
     const commits = await octokit.repos.listCommits({
       owner: AUTHOR,
       repo: REPO,
@@ -45,12 +36,6 @@ const { GH_TOKEN, AUTHOR, REPO } = process.env;
           path: "musicCard.svg",
           type: "blob",
           sha: musicSvgSha,
-        },
-        {
-          mode: "100644",
-          path: "steamCard.svg",
-          type: "blob",
-          sha: steamSvgSha,
         },
       ],
       base_tree: lastSha,
