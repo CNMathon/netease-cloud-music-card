@@ -7,8 +7,8 @@ exports.getCard = async function ({
   songAuthors,
   songCover,
 }) {
-  const svg = `<svg width="467" height="225" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <foreignObject width="467" height="225">
+  const svg = `<svg width="487" height="225" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <foreignObject width="487" height="225">
       <div xmlns="http://www.w3.org/1999/xhtml" class="container" style="padding: 10px;">
           <style>
           * {
