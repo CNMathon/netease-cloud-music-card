@@ -82,5 +82,6 @@ const { GH_TOKEN, AUTHOR, REPO } = process.env;
     console.log(result);
   } catch (err) {
     console.error(`上传 SVG 时发生了错误：${err}`);
+    throw err;
   }
 })();

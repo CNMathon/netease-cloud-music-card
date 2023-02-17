@@ -1,61 +1,61 @@
-require('dotenv').config();
-const { Octokit } = require('@octokit/rest');
-const { user_record, song_detail, user_account } = require('NeteaseCloudMusicApi');
-const axios = require('axios').default;
+require("dotenv").config();
+const { Octokit } = require("@octokit/rest");
+const {
+  user_record,
+  song_detail,
+  user_account,
+} = require("NeteaseCloudMusicApi");
+const axios = require("axios").default;
 
 async function getBase64(url) {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    return Buffer.from(response.data, 'binary').toString('base64');
+  const response = await axios.get(url, { responseType: "arraybuffer" });
+  return Buffer.from(response.data, "binary").toString("base64");
 }
 
-const {
-    USER_ID,
-    USER_TOKEN,
-    GH_TOKEN,
-    AUTHOR,
-    REPO,
-} = process.env;
+const { USER_ID, USER_TOKEN, GH_TOKEN, AUTHOR, REPO } = process.env;
 
 (async () => {
-    const account = await user_account({
-        cookie: `MUSIC_U=${USER_TOKEN}`,
-    })
-    const username = account.body.profile.nickname;
-    const avatarUrl = account.body.profile.avatarUrl + "?param=128y128"; // 压缩
-    console.log(`用户名：${username}\n个人头像: ${avatarUrl}`);
+  const account = await user_account({
+    cookie: `MUSIC_U=${USER_TOKEN}`,
+  });
+  const username = account.body.profile.nickname;
+  const avatarUrl = account.body.profile.avatarUrl + "?param=128y128"; // 压缩
+  console.log(`用户名：${username}\n个人头像: ${avatarUrl}`);
 
-    /*
+  /*
       获取歌单记录
     */
-   
-    const record = await user_record({
-        cookie: `MUSIC_U=${USER_TOKEN}`,
-        uid: USER_ID,
-        type: 1,
-    }).catch(error => console.error(`无法获取用户播放记录 \n${error}`));
 
-    const content = record.body;
-    const songId = content.weekData[0].song.id + '';
-    const songLink = "https://music.163.com/#/song?id=" + songId
-    const songName = content.weekData[0].song.name.replace("&", "&amp;");
-    const songAuthorArray = content.weekData[0].song.ar;
-    const playCount = content.weekData[0].playCount;
+  const record = await user_record({
+    cookie: `MUSIC_U=${USER_TOKEN}`,
+    uid: USER_ID,
+    type: 1,
+  }).catch((error) => console.error(`无法获取用户播放记录 \n${error}`));
 
-    const songAuthors = songAuthorArray.map(i => i.name).join(' / ');
+  const content = record.body;
+  const songId = content.weekData[0].song.id + "";
+  const songLink = "https://music.163.com/#/song?id=" + songId;
+  const songName = content.weekData[0].song.name.replace("&", "&amp;");
+  const songAuthorArray = content.weekData[0].song.ar;
+  const playCount = content.weekData[0].playCount;
 
-    const songDetail = await song_detail({
-        cookie: `MUSIC_U=${USER_TOKEN}`,
-        ids: songId,
-    }).catch(error => console.error(`无法获取歌曲信息 \n${error}`));
+  const songAuthors = songAuthorArray.map((i) => i.name).join(" / ");
 
-    const songCover = songDetail.body.songs[0].al.picUrl + "?param=300y300";
+  const songDetail = await song_detail({
+    cookie: `MUSIC_U=${USER_TOKEN}`,
+    ids: songId,
+  }).catch((error) => console.error(`无法获取歌曲信息 \n${error}`));
 
-    console.log(`歌曲名：${songName}\n歌曲链接：${songLink}\n歌曲作者：${songAuthors}\n歌曲封面：${songCover}\n播放次数：${playCount}`);
+  const songCover = songDetail.body.songs[0].al.picUrl + "?param=300y300";
 
-    var svgContent = "";
-    try {
-        svgContent = Buffer.from(
-`<svg width="540" height="290" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  console.log(
+    `歌曲名：${songName}\n歌曲链接：${songLink}\n歌曲作者：${songAuthors}\n歌曲封面：${songCover}\n播放次数：${playCount}`
+  );
+
+  var svgContent = "";
+  try {
+    svgContent = Buffer.from(
+      `<svg width="540" height="290" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
    <a href="${songLink}">
     <foreignObject width="540" height="290">
         <div xmlns="http://www.w3.org/1999/xhtml" class="container" style="padding: 10px;">
@@ -209,19 +209,27 @@ const {
 
             <div class="card">
                 <div class="user">
-                    <img class="avatar" src="data:image/jpg;base64,${await getBase64(avatarUrl)}"/>
+                    <img class="avatar" src="data:image/jpg;base64,${await getBase64(
+                      avatarUrl
+                    )}"/>
                     <a class="username">${username}</a>
                     <a class="macOS"></a>
                     <div class="clear"></div>
                 </div>
                 <div class="most-music">
                 <div class="cover-box">
-                    <img class="cover" src="data:image/jpg;base64,${await getBase64(songCover)}" />
-                    <img class="msk" src="data:image/jpg;base64,${await getBase64('https://s2.music.126.net/style/web2/img/ie6/singlecover.png')}" />
+                    <img class="cover" src="data:image/jpg;base64,${await getBase64(
+                      songCover
+                    )}" />
+                    <img class="msk" src="data:image/jpg;base64,${await getBase64(
+                      "https://s2.music.126.net/style/web2/img/ie6/singlecover.png"
+                    )}" />
                 </div>
                 <div class="music-list">
                     <div class="hello">
-                        <img class="neteasecloud" src="data:image/jpg;base64,${await getBase64('https://s1.music.126.net/style/favicon.ico')}" />
+                        <img class="neteasecloud" src="data:image/jpg;base64,${await getBase64(
+                          "https://s1.music.126.net/style/favicon.ico"
+                        )}" />
                         <a class="intro">这周正在听：</a>
                     </div>
                     <div>
@@ -237,72 +245,71 @@ const {
    </a>
 </svg>
 `
-        ).toString("base64");
-    } catch(err) {
-        console.error(`处理 SVG 时发生了错误：${err}`);
-    }
+    ).toString("base64");
+  } catch (err) {
+    console.error(`处理 SVG 时发生了错误：${err}`);
+  }
 
-    try {
-        const octokit = new Octokit({
-            auth: GH_TOKEN,
-        });
+  try {
+    const octokit = new Octokit({
+      auth: GH_TOKEN,
+    });
 
-        const {
-            data: { sha: svgSha }
-        } = await octokit.git.createBlob({
-            owner: AUTHOR,
-            repo: REPO,
-            content: svgContent,
-            encoding: "base64"
-        });
+    const {
+      data: { sha: svgSha },
+    } = await octokit.git.createBlob({
+      owner: AUTHOR,
+      repo: REPO,
+      content: svgContent,
+      encoding: "base64",
+    });
 
-        const commits = await octokit.repos.listCommits({
-            owner: AUTHOR,
-            repo: REPO,
-        });
-        const lastSha = commits.data[0].sha;
-        const {
-            data: { sha: treeSHA }
-        } =  await octokit.git.createTree({
-            owner: AUTHOR,
-            repo: REPO,
-            tree: [
-                {
-                    mode: '100644',
-                    path: "card.svg",
-                    type: "blob",
-                    sha: svgSha
-                }
-            ],
-            base_tree: lastSha,
-        });
-        const {
-            data: { sha: newSHA }
-        } =  await octokit.git.createCommit({
-            owner: AUTHOR,
-            repo: REPO,
-            author: {
-                name: "github-actions[bot]",
-                email: "41898282+github-actions[bot]@users.noreply.github.com",
-            },
-            committer: {
-                name: "github-actions[bot]",
-                email: "41898282+github-actions[bot]@users.noreply.github.com",
-            },
-            tree: treeSHA,
-            message: 'Update SVG periodically',
-            parents: [ lastSha ],
-        });
-        const result = await octokit.git.updateRef({
-            owner: AUTHOR,
-            repo: REPO,
-            ref: "heads/main",
-            sha: newSHA,
-        });
-        console.log(result);
-    } catch(err) {
-        console.error(`上传 SVG 时发生了错误：${err}`);
-    }
-
+    const commits = await octokit.repos.listCommits({
+      owner: AUTHOR,
+      repo: REPO,
+    });
+    const lastSha = commits.data[0].sha;
+    const {
+      data: { sha: treeSHA },
+    } = await octokit.git.createTree({
+      owner: AUTHOR,
+      repo: REPO,
+      tree: [
+        {
+          mode: "100644",
+          path: "card.svg",
+          type: "blob",
+          sha: svgSha,
+        },
+      ],
+      base_tree: lastSha,
+    });
+    const {
+      data: { sha: newSHA },
+    } = await octokit.git.createCommit({
+      owner: AUTHOR,
+      repo: REPO,
+      author: {
+        name: "github-actions[bot]",
+        email: "41898282+github-actions[bot]@users.noreply.github.com",
+      },
+      committer: {
+        name: "github-actions[bot]",
+        email: "41898282+github-actions[bot]@users.noreply.github.com",
+      },
+      tree: treeSHA,
+      message: "Update SVG periodically",
+      parents: [lastSha],
+    });
+    const result = await octokit.git.updateRef({
+      owner: AUTHOR,
+      repo: REPO,
+      ref: "heads/main",
+      sha: newSHA,
+    });
+    console.log(result);
+  } catch (err) {
+    console.error(`上传 SVG 时发生了错误：${err}`);
+    throw err;
+  }
 })();
-
